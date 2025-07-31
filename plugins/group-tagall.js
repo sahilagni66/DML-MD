@@ -1,1 +1,53 @@
-const _0x298f28=_0x42d5;function _0x42d5(_0x5ca891,_0x3e2899){const _0x1288f5=_0x1288();return _0x42d5=function(_0x42d53a,_0x4d487a){_0x42d53a=_0x42d53a-0x129;let _0x156f6b=_0x1288f5[_0x42d53a];return _0x156f6b;},_0x42d5(_0x5ca891,_0x3e2899);}(function(_0x3a7037,_0x5a84a0){const _0xaae852=_0x42d5,_0x57b359=_0x3a7037();while(!![]){try{const _0x54eee0=parseInt(_0xaae852(0x134))/0x1+parseInt(_0xaae852(0x13f))/0x2*(-parseInt(_0xaae852(0x13a))/0x3)+-parseInt(_0xaae852(0x147))/0x4*(parseInt(_0xaae852(0x13b))/0x5)+-parseInt(_0xaae852(0x139))/0x6+-parseInt(_0xaae852(0x135))/0x7*(parseInt(_0xaae852(0x140))/0x8)+-parseInt(_0xaae852(0x12c))/0x9*(-parseInt(_0xaae852(0x131))/0xa)+parseInt(_0xaae852(0x132))/0xb;if(_0x54eee0===_0x5a84a0)break;else _0x57b359['push'](_0x57b359['shift']());}catch(_0x17e19b){_0x57b359['push'](_0x57b359['shift']());}}}(_0x1288,0x943b2));function _0x1288(){const _0x53c56e=['20684070Wicytv','*\x0a▢\x20Message:\x20*','1133630ozdqMV','595IPbjQf','Unknown\x20Group','map','@s.whatsapp.net','3291954njcelb','3205527MZSQVZ','703070fzeRRo','❌\x20Only\x20group\x20admins\x20or\x20the\x20bot\x20owner\x20can\x20use\x20this\x20command.','🗣️','❤‍🩹','2MXmyOU','24792VzTSPA','Attention\x20Everyone','gc_tagall','▢\x20Group\x20:\x20*','length','*\x0a\x0a┌───⊷\x20*MENTIONS*\x0a','└──✪\x20DML\x20┃\x20MD\x20✪──','28pHsepI','catch','../command','❌\x20This\x20command\x20can\x20only\x20be\x20used\x20in\x20groups.','message','slice','subject','❌\x20*Error\x20Occurred\x20!!*\x0a\x0a','trim','floor','includes','45xUlTwk','random','*\x0a▢\x20Members\x20:\x20*','❌\x20No\x20members\x20found\x20in\x20this\x20group.','indexOf','916070tBfcns'];_0x1288=function(){return _0x53c56e;};return _0x1288();}const config=require('../config'),{cmd,commands}=require(_0x298f28(0x149)),{getBuffer,getGroupAdmins,getRandom,h2k,isUrl,Json,runtime,sleep,fetchJson}=require('../lib/functions');cmd({'pattern':'tagall','react':'🔊','alias':[_0x298f28(0x142)],'desc':'To\x20Tag\x20all\x20Members','category':'group','use':'.tagall\x20[message]','filename':__filename},async(_0x362cdd,_0x28c5c4,_0xce8548,{from:_0x4a286f,participants:_0x5ac01a,reply:_0xa39cc4,isGroup:_0x1583f9,senderNumber:_0x3f2f03,groupAdmins:_0x35d5b9,prefix:_0x5bb200,command:_0x404bc4,args:_0x2c3854,body:_0x5d1505})=>{const _0x2ef635=_0x298f28;try{if(!_0x1583f9)return _0xa39cc4(_0x2ef635(0x14a));const _0x9921ca=_0x362cdd['user']['id']['split'](':')[0x0],_0x598753=_0x3f2f03+_0x2ef635(0x138);if(!_0x35d5b9[_0x2ef635(0x12b)](_0x598753)&&_0x3f2f03!==_0x9921ca)return _0xa39cc4(_0x2ef635(0x13c));let _0x125c51=await _0x362cdd['groupMetadata'](_0x4a286f)[_0x2ef635(0x148)](()=>null);if(!_0x125c51)return _0xa39cc4('❌\x20Failed\x20to\x20fetch\x20group\x20information.');let _0x494d55=_0x125c51[_0x2ef635(0x14d)]||_0x2ef635(0x136),_0x58c2af=_0x5ac01a?_0x5ac01a[_0x2ef635(0x144)]:0x0;if(_0x58c2af===0x0)return _0xa39cc4(_0x2ef635(0x12f));let _0x59bc1a=['📢','🔊','🌐','🔰',_0x2ef635(0x13e),'🤍','🖤','🩵','📝','💗','🔖','🪩','📦','🎉','🛡️','💸','⏳','🗿','🚀','🎧','🪀','⚡','🚩','🍁',_0x2ef635(0x13d),'👻','⚠️','🔥'],_0x4dc772=_0x59bc1a[Math[_0x2ef635(0x12a)](Math[_0x2ef635(0x12d)]()*_0x59bc1a[_0x2ef635(0x144)])],_0x2d4949=_0x5d1505[_0x2ef635(0x14c)](_0x5d1505[_0x2ef635(0x130)](_0x404bc4)+_0x404bc4[_0x2ef635(0x144)])[_0x2ef635(0x129)]();if(!_0x2d4949)_0x2d4949=_0x2ef635(0x141);let _0x293830=_0x2ef635(0x143)+_0x494d55+_0x2ef635(0x12e)+_0x58c2af+_0x2ef635(0x133)+_0x2d4949+_0x2ef635(0x145);for(let _0x11237f of _0x5ac01a){if(!_0x11237f['id'])continue;_0x293830+=_0x4dc772+'\x20@'+_0x11237f['id']['split']('@')[0x0]+'\x0a';}_0x293830+=_0x2ef635(0x146),_0x362cdd['sendMessage'](_0x4a286f,{'text':_0x293830,'mentions':_0x5ac01a[_0x2ef635(0x137)](_0x3fc1c8=>_0x3fc1c8['id'])},{'quoted':_0x28c5c4});}catch(_0x13ab7c){console['error']('TagAll\x20Error:',_0x13ab7c),_0xa39cc4(_0x2ef635(0x14e)+(_0x13ab7c[_0x2ef635(0x14b)]||_0x13ab7c));}});
+const config = require('../config')
+const { cmd, commands } = require('../command')
+const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
+
+cmd({
+    pattern: "tagall",
+    react: "📑",
+    alias: ["gc_tagall"],
+    desc: "To Tag all Members",
+    category: "group",
+    use: '.tagall [message]',
+    filename: __filename
+},
+async (conn, mek, m, { from, participants, reply, isGroup, senderNumber, groupAdmins, prefix, command, args, body }) => {
+    try {
+        if (!isGroup) return reply("*📛 ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ᴜsᴇᴅ ɪɴ ɢʀᴏᴜᴘs.*");
+        
+        const botOwner = conn.user.id.split(":")[0]; // Extract bot owner's number
+        const senderJid = senderNumber + "@s.whatsapp.net";
+
+        if (!groupAdmins.includes(senderJid) && senderNumber !== botOwner) {
+            return reply("*📛 σɴℓʏ gʀσᴜᴘ α∂мιɴs σʀ тнє σωɴєʀ ᴄαɴ ᴜsє тнιѕ ᴄσммαɴ∂.*");
+        }
+
+        // Ensure group metadata is fetched properly
+        let groupInfo = await conn.groupMetadata(from).catch(() => null);
+        if (!groupInfo) return reply("❌ Failed to fetch group information.");
+
+        let groupName = groupInfo.subject || "Unknown Group";
+        let totalMembers = participants ? participants.length : 0;
+        if (totalMembers === 0) return reply("❌ No members found in this group.");
+
+        let emojis = ['━﹝̣ׄ🩰̸̶ּׄ͜﹞', '🧭ᩨ─', '━ ✦ ⃞🌖', '━ ✦ ⃞🥮ᩧᩙᩪᩩ̶̷  ͟ ͟ ͟ ͟', '━ ✦ ⃞🏴‍☠️‌'];
+        let randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+        // Proper message extraction
+        let message = body.slice(body.indexOf(command) + command.length).trim();
+        if (!message) message = "𝐖α𝗄𝖾 𝐔ρ 𝐄𝗏𝖾𝗋𝗒ⱺ𐓣𝖾"; // Default message
+
+        let teks = `*𝐆𝗋𖹭ׁ𝗎𝗉: ${groupName}*\n*𝐌𝖾𝗆𝖻𝖾𝗋: ${totalMembers}*\n*𝐌𝖾𝗌𝗌𝖺𝗀𝖾: ${message}*\n\n*(▇▇) 💮 ̸̷̶   ٘ 〔 𝐓𝖺𝗀𝗅𝕚͜𝗌𝗍 〕 ‏‏‎‎╼──╮*\n`;
+
+        for (let mem of participants) {
+            if (!mem.id) continue; // Prevent undefined errors
+            teks += `*${randomEmoji}* @${mem.id.split('@')[0]}\n`;
+	}
+
+        conn.sendMessage(from, { text: teks, mentions: participants.map(a => a.id) }, { quoted: mek });
+
+    } catch (e) {
+        console.error("TagAll Error:", e);
+        reply(`❌ *Error Occurred !!*\n\n${e.message || e}`);
+    }
+})
