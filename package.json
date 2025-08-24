@@ -1,7 +1,7 @@
 {
   "name": "DML-MD",
   "version": "1.0.0",
-  "description": "A Node.js Javascript Bot Created By Dml",
+  "description": "A Whatsapp Bot Created By Dml",
   "main": "index.js",
   "scripts": {
     "start": "pm2 start index.js --deep-monitoring --attach --name DML-MD",
