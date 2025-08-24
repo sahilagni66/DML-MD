@@ -18,7 +18,6 @@
     "util": "^0.12.4",
     "express": "^5.1.0",
     "moment-timezone": "^0.6.0",
-    "jimp": "^0.22.12"
     "axios": "^1.7.9",
     "crypto-digest-sync": "^1.0.0",
     "crypto-js": "^4.2.0",
