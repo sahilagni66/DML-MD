@@ -59,7 +59,7 @@ You need a session to connect your bot. Choose your preferred method , I recomme
 ### 🔹 Step 3: Deploy with One Click
 Easily deploy to Heroku with the button below:
 
-[![Deploy](https://img.shields.io/badge/DEPLOY_TO_HEROKU-430098?style=for-the-badge&logo=heroku&logoColor=white)](https://dmlv1.vercel.app/)
+[![Deploy](https://img.shields.io/badge/DEPLOY_TO_HEROKU-430098?style=for-the-badge&logo=heroku&logoColor=white)](https://verify-dmlbot.vercel.app)
 
 
 [![Deploy](https://img.shields.io/badge/DEPLOY_TO_RAILWAY-430098?style=for-the-badge&logo=railway&logoColor=white)](https://railway.com/new)
