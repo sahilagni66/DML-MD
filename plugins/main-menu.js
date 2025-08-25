@@ -1,134 +1,352 @@
 const config = require('../config')
 const { cmd, commands } = require('../command');
+const path = require('path'); 
 const os = require("os")
+const fs = require('fs');
 const {runtime} = require('../lib/functions')
-const fs = require("fs");
-const path = require("path");
+const axios = require('axios')
 
 cmd({
     pattern: "menu",
     alias: ["allmenu","fullmenu"],
-    use: '.menu2',
+    use: '.menu',
     desc: "Show all bot commands",
     category: "menu",
     react: "📜",
     filename: __filename
 }, 
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    const randomIndex = Math.floor(Math.random() * 10) + 1;
-      const imagePath = path.join(__dirname, '..', 'Dml', `menu${randomIndex}.jpg`);
-      const imageBuffer = fs.readFileSync(imagePath);
-  
-        let dec = ` ╭━━━〔 🚀 BOT INFORMATION 〕━━━╮
-┃ 👑 Owner      : ${config.OWNER_NAME}
-┃ ⚙️ Prefix     : [${config.PREFIX}]
-┃ 🌐 Platform   : Heroku
-┃ 📦 Version    : 4.0.0
-┃ ⏱️ Runtime    : ${runtime(process.uptime())}
-╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯
+    try {
+        let dec = `╭━━〔 🚀 *${config.BOT_NAME}* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 👑 Owner : *${config.OWNER_NAME}*
+┃◈┃• ⚙️ Prefix : *[${config.PREFIX}]*
+┃◈┃• 🌐 Platform : *Heroku*
+┃◈┃• 📦 Version : *4.0.0*
+┃◈┃• ⏱️ Runtime : *${runtime(process.uptime())}*
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-╔═══════════════════╗
-║      🛠 DML LIST       ║
-╚═══════════════════╝
-🛑  gpt            🗣️ AI Chat
-🛑 vv               🎥 Video
-🛑 vv2             🎞️ Video 2
-🛑 bible          📖 Scripture
-🛑 channe l    📺 Channel Info
-🛑 unblock     🔓 Unblock
-🛑 block         🚫 Block
-🛑 requestunban   ✅Whatsapp 
-🛑 uptime      ⏱️ Status
-🛑 gitclone     📂 Clone Repo
-🛑 check        ✔️ Verify
-🛑 ping          📡 Ping
-🛑 pair           🔗 Link Accounts
-🛑 owner       👑 Owner Info
-🛑setpp         🤳🏻 Set Wa.dp
-🛑 getpp        🖼️ Get Profile Pic
-🛑 github       💻 GitHub
-🛑 listonline   👥 Online Users
-🛑 alive           ✅ Alive Check
-🛑 menu         📋 Bot Menu
-🛑 repo           📦 Repository
-🛑 attp          ✏️ Text to Sticker
-🛑 post         📝 Post Message
-🛑 restart      🔄 Restart Bot
-🛑 send         📤 Send Message
-🛑 save          💾 Save Data
-🛑 sticker      🖼️ Create Sticker
-🛑 take          🎨 Take Action
-🛑support     🇹🇿 Support channel
+╭━━〔 📥 *DOWNLOAD MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🟦 facebook
+┃◈┃• 📁 mediafire
+┃◈┃• 🎵 tiktok
+┃◈┃• 🐦 twitter
+┃◈┃• 📷 insta
+┃◈┃• 📦 apk
+┃◈┃• 🖼️ img
+┃◈┃• ▶️ tt2
+┃◈┃• 📌 pins
+┃◈┃• 🔄 apk2
+┃◈┃• 🔵 fb2
+┃◈┃• 📍 pinterest
+┃◈┃• 🎶 spotify
+┃◈┃• 🎧 play
+┃◈┃• 🎧 play2
+┃◈┃• 🔉 audio
+┃◈┃• 🎬 video
+┃◈┃• 📹 video2
+┃◈┃• 🎵 ytmp3
+┃◈┃• 📹 ytmp4
+┃◈┃• 🎶 song
+┃◈┃• 🎬 darama
+┃◈┃• ☁️ gdrive
+┃◈┃• 🌐 ssweb
+┃◈┃• 🎵 tiks
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-╔═══════════════════╗
-║   ⬇️  DML DOWNLOAD  ⬇️  ║
-╚═══════════════════╝
-🖥 fb                📘 Facebook
-🖥 play             ▶️ Play Store
-🖥 apk              📱 APK Files
-🖥 video           🎬 Video Download
-🖥 img              🖼️ Image Download
-🖥 tiktok          🎵 TikTok
-🖥 fancy           🎨 Fancy Text
-🖥 imgscan       🔍 Image Scan
-🖥 stabilitya i   🤖 AI Tools
-🖥 fluxai            🔄 AI Flux
-🖥 lyrics           🎤 Lyrics
-🖥 movie          🍿 Movies
-🖥 screenshot   📸 Screenshot
-🖥 rw                 🔄 Rewind
-🖥 toppt           📈 Top Posts
-🖥 tomp3          🎧 To MP3
-🖥 short            ✂️ URL Shorten
-🖥 convert        🔄 Convert Files
-🖥 trt                ⏳ Translate
-🖥 yts               🎥 YouTube Search
-🖥 url                🔗 URL Tools
+╭━━〔 👥 *GROUP MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🔗 grouplink
+┃◈┃• 🚪 kickall
+┃◈┃• 🚷 kickall2
+┃◈┃• 🚫 kickall3
+┃◈┃• ➕ add
+┃◈┃• ➖ remove
+┃◈┃• 👢 kick
+┃◈┃• ⬆️ promote
+┃◈┃• ⬇️ demote
+┃◈┃• 🚮 dismiss
+┃◈┃• 🔄 revoke
+┃◈┃• 👋 setgoodbye
+┃◈┃• 🎉 setwelcome
+┃◈┃• 🗑️ delete
+┃◈┃• 🖼️ getpic
+┃◈┃• ℹ️ ginfo
+┃◈┃• ⏳ disappear on
+┃◈┃• ⏳ disappear off
+┃◈┃• ⏳ disappear 7D,24H
+┃◈┃• 📝 allreq
+┃◈┃• ✏️ updategname
+┃◈┃• 📝 updategdesc
+┃◈┃• 📩 joinrequests
+┃◈┃• 📨 senddm
+┃◈┃• 🏃 nikal
+┃◈┃• 🔇 mute
+┃◈┃• 🔊 unmute
+┃◈┃• 🔒 lockgc
+┃◈┃• 🔓 unlockgc
+┃◈┃• 📩 invite
+┃◈┃• #️⃣ tag
+┃◈┃• 🏷️ hidetag
+┃◈┃• @️⃣ tagall
+┃◈┃• 👔 tagadmins
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-╔═══════════════════╗
-║      👥 DML GROUP     ║
-╚═══════════════════╝
-🔴 gdesc         📝 Group Description
-🔴 add             ➕ Add Member
-🔴 kick             👢 Remove Member
-🔴 hidetag       🤫 Hide Tag
-🔴 tagall          📣 Tag Everyone
-🔴 antilink       🚫 Anti-Link
-🔴 welcome     🤗 Welcome Message
-🔴 gname        🏷️ Group Name
-🔴 ginfo           ℹ️ Group Info
-🔴 join             🔗 Join Link
-🔴 link             🔗 Group Link
-🔴 vcfl            🎤 Voice Call Flag
-🔴 vcf              👮🏻 Save for save
-🔴 left            👋 Leave Group
-🔴 mute          🔇 Mute Group
-🔴 out             🚪 Leave
-🔴 unmute       🔊 Unmute Group
-🔴 newgc         🆕 New Group
+╭━━〔 🎭 *REACTIONS MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 👊 bully @tag
+┃◈┃• 🤗 cuddle @tag
+┃◈┃• 😢 cry @tag
+┃◈┃• 🤗 hug @tag
+┃◈┃• 🐺 awoo @tag
+┃◈┃• 💋 kiss @tag
+┃◈┃• 👅 lick @tag
+┃◈┃• 🖐️ pat @tag
+┃◈┃• 😏 smug @tag
+┃◈┃• 🔨 bonk @tag
+┃◈┃• 🚀 yeet @tag
+┃◈┃• 😊 blush @tag
+┃◈┃• 😄 smile @tag
+┃◈┃• 👋 wave @tag
+┃◈┃• ✋ highfive @tag
+┃◈┃• 🤝 handhold @tag
+┃◈┃• 🍜 nom @tag
+┃◈┃• 🦷 bite @tag
+┃◈┃• 🤗 glomp @tag
+┃◈┃• 👋 slap @tag
+┃◈┃• 💀 kill @tag
+┃◈┃• 😊 happy @tag
+┃◈┃• 😉 wink @tag
+┃◈┃• 👉 poke @tag
+┃◈┃• 💃 dance @tag
+┃◈┃• 😬 cringe @tag
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-╔═══════════════════╗
-║     DML SETTINGS ⚙️   ║
-╚═══════════════════╝
-1️⃣ mode                               🔄 Mode Switch
-2️⃣ auto                                 🤖 Auto Features
-3️⃣ auto_typing  on/off        ⌨️ Typing Status
-4️⃣ auto_react on/off            ❤️ Reactions
-5️⃣ deletelink                        🗑️ Delete Links
-6️⃣ antilink on/off                 🚫 Anti-Link
-7️⃣ anticall on/off                 📅 Anti-Call
-8️⃣ blocklist                           🚫 Block List
+╭━━〔 🎨 *LOGO MAKER* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 💡 neonlight
+┃◈┃• 🎀 blackpink
+┃◈┃• 🐉 dragonball
+┃◈┃• 🎭 3dcomic
+┃◈┃• 🇺🇸 america
+┃◈┃• 🍥 naruto
+┃◈┃• 😢 sadgirl
+┃◈┃• ☁️ clouds
+┃◈┃• 🚀 futuristic
+┃◈┃• 📜 3dpaper
+┃◈┃• ✏️ eraser
+┃◈┃• 🌇 sunset
+┃◈┃• 🍃 leaf
+┃◈┃• 🌌 galaxy
+┃◈┃• 💀 sans
+┃◈┃• 💥 boom
+┃◈┃• 💻 hacker
+┃◈┃• 😈 devilwings
+┃◈┃• 🇳🇬 nigeria
+┃◈┃• 💡 bulb
+┃◈┃• 👼 angelwings
+┃◈┃• ♈ zodiac
+┃◈┃• 💎 luxury
+┃◈┃• 🎨 paint
+┃◈┃• ❄️ frozen
+┃◈┃• 🏰 castle
+┃◈┃• 🖋️ tatoo
+┃◈┃• 🔫 valorant
+┃◈┃• 🐻 bear
+┃◈┃• 🔠 typography
+┃◈┃• 🎂 birthday
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
 
-────────────────────────
-💥 SPONSORED BY YOU 🫵🏻
-════════════════════════
+╭━━〔 👑 *OWNER MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 👑 owner
+┃◈┃• 📜 menu
+┃◈┃• 📜 menu2
+┃◈┃• 📊 vv
+┃◈┃• 📋 listcmd
+┃◈┃• 📚 allmenu
+┃◈┃• 📦 repo
+┃◈┃• 🚫 block
+┃◈┃• ✅ unblock
+┃◈┃• 🖼️ fullpp
+┃◈┃• 🖼️ setpp
+┃◈┃• 🔄 restart
+┃◈┃• ⏹️ shutdown
+┃◈┃• 🔄 updatecmd
+┃◈┃• 💚 alive
+┃◈┃• 🏓 ping
+┃◈┃• 🆔 gjid
+┃◈┃• 🆔 jid
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
 
+╭━━〔 🎉 *FUN MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🤪 shapar
+┃◈┃• ⭐ rate
+┃◈┃• 🤬 insult
+┃◈┃• 💻 hack
+┃◈┃• 💘 ship
+┃◈┃• 🎭 character
+┃◈┃• 💌 pickup
+┃◈┃• 😆 joke
+┃◈┃• ❤️ hrt
+┃◈┃• 😊 hpy
+┃◈┃• 😔 syd
+┃◈┃• 😠 anger
+┃◈┃• 😳 shy
+┃◈┃• 💋 kiss
+┃◈┃• 🧐 mon
+┃◈┃• 😕 cunfuzed
+┃◈┃• 🖼️ setpp
+┃◈┃• ✋ hand
+┃◈┃• 🏃 nikal
+┃◈┃• 🤲 hold
+┃◈┃• 🤗 hug
+┃◈┃• 🏃 nikal
+┃◈┃• 🎵 hifi
+┃◈┃• 👉 poke
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
+
+╭━━〔 🔄 *CONVERT MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🏷️ sticker
+┃◈┃• 🏷️ sticker2
+┃◈┃• 😀 emojimix
+┃◈┃• ✨ fancy
+┃◈┃• 🖼️ take
+┃◈┃• 🎵 tomp3
+┃◈┃• 🗣️ tts
+┃◈┃• 🌐 trt
+┃◈┃• 🔢 base64
+┃◈┃• 🔠 unbase64
+┃◈┃• 010 binary
+┃◈┃• 🔤 dbinary
+┃◈┃• 🔗 tinyurl
+┃◈┃• 🌐 urldecode
+┃◈┃• 🌐 urlencode
+┃◈┃• 🌐 url
+┃◈┃• 🔁 repeat
+┃◈┃• ❓ ask
+┃◈┃• 📖 readmore
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
+
+╭━━〔 🤖 *AI MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🧠 ai
+┃◈┃• 🤖 gpt3
+┃◈┃• 🤖 gpt2
+┃◈┃• 🤖 gptmini
+┃◈┃• 🤖 gpt
+┃◈┃• 🔵 meta
+┃◈┃• 📦 blackbox
+┃◈┃• 🌈 luma
+┃◈┃• 🎧 dj
+┃◈┃• 👑 dml
+┃◈┃• 🤵 daudy
+┃◈┃• 🧠 gpt4
+┃◈┃• 🔍 bing
+┃◈┃• 🎨 imagine
+┃◈┃• 🖼️ imagine2
+┃◈┃• 🤖 copilot
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
+
+╭━━〔 ⚡ *MAIN MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🏓 ping
+┃◈┃• 🏓 ping2
+┃◈┃• 🚀 speed
+┃◈┃• 📡 live
+┃◈┃• 💚 alive
+┃◈┃• ⏱️ runtime
+┃◈┃• ⏳ uptime
+┃◈┃• 📦 repo
+┃◈┃• 👑 owner
+┃◈┃• 📜 menu
+┃◈┃• 📜 menu2
+┃◈┃• 🔄 restart
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
+
+╭━━〔 🎎 *ANIME MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🤬 fack
+┃◈┃• ✅ truth
+┃◈┃• 😨 dare
+┃◈┃• 🐶 dog
+┃◈┃• 🐺 awoo
+┃◈┃• 👧 garl
+┃◈┃• 👰 waifu
+┃◈┃• 🐱 neko
+┃◈┃• 🧙 megnumin
+┃◈┃• 🐱 neko
+┃◈┃• 👗 maid
+┃◈┃• 👧 loli
+┃◈┃• 🎎 animegirl
+┃◈┃• 🎎 animegirl1
+┃◈┃• 🎎 animegirl2
+┃◈┃• 🎎 animegirl3
+┃◈┃• 🎎 animegirl4
+┃◈┃• 🎎 animegirl5
+┃◈┃• 🎬 anime1
+┃◈┃• 🎬 anime2
+┃◈┃• 🎬 anime3
+┃◈┃• 🎬 anime4
+┃◈┃• 🎬 anime5
+┃◈┃• 📰 animenews
+┃◈┃• 🦊 foxgirl
+┃◈┃• 🍥 naruto
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
+
+╭━━〔 ℹ️ *OTHER MENU* 〕━━┈⊷
+┃◈╭─────────────────·๏
+┃◈┃• 🕒 timenow
+┃◈┃• 📅 date
+┃◈┃• 🔢 count
+┃◈┃• 🧮 calculate
+┃◈┃• 🔢 countx
+┃◈┃• 🎲 flip
+┃◈┃• 🪙 coinflip
+┃◈┃• 🎨 rcolor
+┃◈┃• 🎲 roll
+┃◈┃• ℹ️ fact
+┃◈┃• 💻 cpp
+┃◈┃• 🎲 rw
+┃◈┃• 💑 pair
+┃◈┃• 💑 pair2
+┃◈┃• 💑 pair3
+┃◈┃• ✨ fancy
+┃◈┃• 🎨 logo <text>
+┃◈┃• 📖 define
+┃◈┃• 📰 news
+┃◈┃• 🎬 movie
+┃◈┃• ☀️ weather
+┃◈┃• 📦 srepo
+┃◈┃• 🤬 insult
+┃◈┃• 💾 save
+┃◈┃• 🌐 wikipedia
+┃◈┃• 🔑 gpass
+┃◈┃• 👤 githubstalk
+┃◈┃• 🔍 yts
+┃◈┃• 📹 ytv
+┃◈╰─────────────────┈⊷
+╰━━━━━━━━━━━━━━━━━━━┈⊷
 > ${config.DESCRIPTION}`;
 
         await conn.sendMessage(
             from,
             {
-                image: imageBuffer,
+                image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/vcdwmp.jpg' },
                 caption: dec,
                 contextInfo: {
                     mentionedJid: [m.sender],
@@ -143,8 +361,14 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
             },
             { quoted: mek }
         );
+// share local audio 
 
-      
+const audioPath = path.join(__dirname, '../assets/menu.m4a');
+await conn.sendMessage(from, {
+    audio: fs.readFileSync(audioPath),
+    mimetype: 'audio/mp4',
+    ptt: true,
+}, { quoted: mek });
         
     } catch (e) {
         console.log(e);
