@@ -27,25 +27,8 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
                 str += `📍 ${i.id}\n`;
             }
 
-            if (str) {
-                // Normal reply with members
-                await reply(`*「 LIST OF GROUP MEMBERS 」*\n\n${str}\n└──✪ DML ┃ MD ✪──`);
-
-                // Also send forwarded channel-style message
-                await conn.sendMessage(from, {
-                    text: `*「 CHANNEL VIEW 」*\n\n${str}`,
-                    contextInfo: {
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: '120363387497418815@newsletter',
-                            serverMessageId: null,
-                            newsletterName: "DML ┃ MD CHANNEL"
-                        }
-                    }
-                }, { quoted: mek });
-
-            } else {
-                reply("❌ No members found!");
-            }
+            str ? reply(`*「 LIST OF GROUP MEMBERS 」*\n\n${str}\n└──🛑 DML ┃ MD 🛑──`)
+                : reply("❌ No members found!");
 
         } else if (type === "user" || type === "pm" || type === "pc" || type === "users") {
             let anu = store.chats.all()
@@ -56,7 +39,7 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
                 str += `📍 ${i.id}\n`;
             }
 
-            str ? reply(`*「 LIST OF PERSONAL CHAT JIDS 」*\n\nTotal: ${anu.length}\n\n${str}\n└──🔴 DML ┃ MD 🔴──`)
+            str ? reply(`*「 LIST OF PERSONAL CHAT JIDS 」*\n\nTotal: ${anu.length}\n\n${str}\n└──✪ DML ┃ MD ✪──`)
                 : reply("❌ No PM chats found!");
 
         } else if (type === "group" || type === "groups" || type === "gc") {
@@ -67,7 +50,7 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
                 str += `📍 ${g}\n`;
             }
 
-            str ? reply(`*「 LIST OF GROUP CHAT JIDS 」*\n\n${str}\n└──🔴 DML ┃ MD 🔴──`)
+            str ? reply(`*「 LIST OF GROUP CHAT JIDS 」*\n\n${str}\n└──🛑 DML ┃ MD 🛑──`)
                 : reply("❌ No group chats found!");
 
         } else {
