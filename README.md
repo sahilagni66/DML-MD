@@ -84,8 +84,3 @@ Easily deploy to Heroku with the button below:
   </a>
 </p>
 
-## ⚠️ Important Notice From Dml
-```diff
-- REDISTRIBUTION STRICTLY PROHIBITED
-+ OFFICIAL SUPPORT ONLY FOR ORIGINAL VERSION
-! VIOLATORS WILL BE BLACKLISTED
