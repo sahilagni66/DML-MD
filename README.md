@@ -84,11 +84,7 @@ Easily deploy to Heroku with the button below:
   </a>
 </p>
 
----
-
-<h3 align="center" style="color: #FF6347; animation: pulse 1.5s infinite;">⚡ OFFICIAL RELEASE v3.0 ⚡</h3>
-
-## ⚠️ Important Notice
+## ⚠️ Important Notice From Dml
 ```diff
 - REDISTRIBUTION STRICTLY PROHIBITED
 + OFFICIAL SUPPORT ONLY FOR ORIGINAL VERSION
