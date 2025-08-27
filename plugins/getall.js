@@ -17,6 +17,7 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
         let str = "";
         let type = (args[0] || "").toLowerCase();
 
+        // 🔹 GET MEMBERS
         if (type === "members" || type === "member") {
             if (!isGroup) return reply("❌ This command only works in groups.");
             const groupInfo = await conn.groupMetadata(from).catch(() => null);
@@ -27,21 +28,50 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
                 str += `📍 ${i.id}\n`;
             }
 
-            str ? reply(`*「 LIST OF GROUP MEMBERS 」*\n\n${str}\n└──🛑 DML ┃ MD 🛑──`)
-                : reply("❌ No members found!");
+            if (!str) return reply("❌ No members found!");
 
+            await conn.sendMessage(from, {
+                text: `*「 LIST OF GROUP MEMBERS 」*\n\n${str}\n└──🔴 DML ┃ MD 🔴──`,
+                contextInfo: {
+                    externalAdReply: {
+                        title: "📢 View Official Channel",
+                        body: "Tap to open our WhatsApp Channel",
+                        mediaType: 1,
+                        renderLargerThumbnail: true,
+                        showAdAttribution: true,
+                        sourceUrl: "https://whatsapp.com/channel/0029Vb2hoPpDZ4Lb3mSkVI3C", // backup link
+                        newsletterJid: "120363387497418815@newsletter" // ✅ your channel JID
+                    }
+                }
+            }, { quoted: mek });
+
+        // 🔹 GET USERS
         } else if (type === "user" || type === "pm" || type === "pc" || type === "users") {
-            let anu = store.chats.all()
-                .filter(v => v.id.endsWith('.net'))
-                .map(v => v);
+            let chats = store.chats.all();
+            let anu = chats.filter(v => v.id && v.id.endsWith("@s.whatsapp.net")); // ✅ strict filter
 
             for (let i of anu) {
                 str += `📍 ${i.id}\n`;
             }
 
-            str ? reply(`*「 LIST OF PERSONAL CHAT JIDS 」*\n\nTotal: ${anu.length}\n\n${str}\n└──✪ DML ┃ MD ✪──`)
-                : reply("❌ No PM chats found!");
+            if (!str) return reply("❌ No personal chats found!");
 
+            await conn.sendMessage(from, {
+                text: `*「 LIST OF PERSONAL CHAT JIDS 」*\n\nTotal: ${anu.length}\n\n${str}\n└──🔴 DML ┃ MD 🔴──`,
+                contextInfo: {
+                    externalAdReply: {
+                        title: "📢 View Official Channel",
+                        body: "Tap to open our WhatsApp Channel",
+                        mediaType: 1,
+                        renderLargerThumbnail: true,
+                        showAdAttribution: true,
+                        sourceUrl: "https://whatsapp.com/channel/0029Vb2hoPpDZ4Lb3mSkVI3C",
+                        newsletterJid: "120363387497418815@newsletter"
+                    }
+                }
+            }, { quoted: mek });
+
+        // 🔹 GET GROUPS
         } else if (type === "group" || type === "groups" || type === "gc") {
             let groups = await conn.groupFetchAllParticipating();
             const gList = Object.values(groups);
@@ -50,12 +80,27 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
                 str += `📍 ${g}\n`;
             }
 
-            str ? reply(`*「 LIST OF GROUP CHAT JIDS 」*\n\n${str}\n└──🛑 DML ┃ MD 🛑──`)
-                : reply("❌ No group chats found!");
+            if (!str) return reply("❌ No group chats found!");
+
+            await conn.sendMessage(from, {
+                text: `*「 LIST OF GROUP CHAT JIDS 」*\n\n${str}\n└──🔴 DML ┃ MD 🔴──`,
+                contextInfo: {
+                    externalAdReply: {
+                        title: "📢 View Official Channel",
+                        body: "Tap to open our WhatsApp Channel",
+                        mediaType: 1,
+                        renderLargerThumbnail: true,
+                        showAdAttribution: true,
+                        sourceUrl: "https://whatsapp.com/channel/0029Vb2hoPpDZ4Lb3mSkVI3C",
+                        newsletterJid: "120363387497418815@newsletter"
+                    }
+                }
+            }, { quoted: mek });
 
         } else {
             return reply(`⚠️ Use: ${prefix}getall members | users | groups`);
         }
+
     } catch (e) {
         console.error("GetAll Error:", e);
         reply(`❌ *Error Occurred !!*\n\n${e.message || e}`);
