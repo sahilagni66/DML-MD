@@ -43,16 +43,9 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
                     forwardedNewsletterMessageInfo: {
                         newsletterJid: '120363387497418815@newsletter',
                         newsletterName: config.BOT_NAME,
-                        serverMessageId: 143
+                        serverMessageId: Math.floor(Math.random() * 1000)
                     }
-                },
-                buttons: [
-                    {
-                        buttonId: "view_channel",
-                        buttonText: { displayText: "📢 View Channel" },
-                        type: 1
-                    }
-                ]
+                }
             }, { quoted: mek });
 
         // 🔹 GET USERS (PM)
@@ -79,16 +72,9 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
                     forwardedNewsletterMessageInfo: {
                         newsletterJid: '120363387497418815@newsletter',
                         newsletterName: config.BOT_NAME,
-                        serverMessageId: 143
+                        serverMessageId: Math.floor(Math.random() * 1000)
                     }
-                },
-                buttons: [
-                    {
-                        buttonId: "view_channel",
-                        buttonText: { displayText: "📢 View Channel" },
-                        type: 1
-                    }
-                ]
+                }
             }, { quoted: mek });
 
         // 🔹 GET GROUPS
@@ -115,16 +101,9 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
                     forwardedNewsletterMessageInfo: {
                         newsletterJid: '120363387497418815@newsletter',
                         newsletterName: config.BOT_NAME,
-                        serverMessageId: 143
+                        serverMessageId: Math.floor(Math.random() * 1000)
                     }
-                },
-                buttons: [
-                    {
-                        buttonId: "view_channel",
-                        buttonText: { displayText: "📢 View Channel" },
-                        type: 1
-                    }
-                ]
+                }
             }, { quoted: mek });
 
         } else {
