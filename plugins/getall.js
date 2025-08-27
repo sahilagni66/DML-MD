@@ -3,107 +3,136 @@ const { cmd } = require('../command')
 const { prefix } = require('../lib/functions')
 
 cmd({
-pattern: "getall",
-react: "📋",
-alias: ["getjids", "fetchall"],
-desc: "Get JIDs of group members / PM chats / all groups.",
-category: "owner",
-use: ".getall [members | users | groups]",
-filename: __filename,
-fromMe: true
+    pattern: "getall",
+    react: "📋",
+    alias: ["getjids", "fetchall"],
+    desc: "Get JIDs of group members / PM chats / all groups.",
+    category: "owner",
+    use: ".getall [members | users | groups]",
+    filename: __filename,
+    fromMe: true
 },
 async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
-try {
-let str = "";
-let type = (args[0] || "").toLowerCase();
+    try {
+        let str = "";
+        let type = (args[0] || "").toLowerCase();
 
-// 🔹 GET MEMBERS  
-    if (type === "members" || type === "member") {  
-        if (!isGroup) return reply("❌ This command only works in groups.");  
-        const groupInfo = await conn.groupMetadata(from).catch(() => null);  
-        if (!groupInfo) return reply("❌ Failed to fetch group info.");  
+        // 🔹 GET MEMBERS
+        if (type === "members" || type === "member") {
+            if (!isGroup) return reply("❌ This command only works in groups.");
+            const groupInfo = await conn.groupMetadata(from).catch(() => null);
+            if (!groupInfo) return reply("❌ Failed to fetch group info.");
 
-        let members = groupInfo.participants || [];  
-        for (let i of members) {  
-            str += `📍 ${i.id}\n`;  
-        }  
+            let members = groupInfo.participants || [];
+            let mentionList = [];
+            str = `*「 LIST OF GROUP MEMBERS 」*\n\n`;
 
-        if (!str) return reply("❌ No members found!");  
+            for (let i of members) {
+                str += `📍 @${i.id.split("@")[0]}\n`;
+                mentionList.push(i.id);
+            }
 
-        await conn.sendMessage(from, {  
-            text: `*「 LIST OF GROUP MEMBERS 」*\n\n${str}\n└──🔴 DML ┃ MD 🔴──`,  
-          contextInfo: {  
-                mentionedJid: [m.sender],  
-                forwardingScore: 999,  
-                isForwarded: true,  
-                forwardedNewsletterMessageInfo: {  
-                    newsletterJid: '120363387497418815@newsletter',  
-                    newsletterName: config.BOT_NAME,  
-                    serverMessageId: 143  
-                      
-                }  
-            }  
-        }, { quoted: mek });  
+            if (!members.length) return reply("❌ No members found!");
 
-    // 🔹 GET USERS  
-    } else if (type === "user" || type === "pm" || type === "pc" || type === "users") {  
-        let chats = store.chats.all();  
-        let anu = chats.filter(v => v.id && v.id.endsWith("@s.whatsapp.net"));  
+            await conn.sendMessage(from, {
+                text: str + `\n└──🔴 DML ┃ MD 🔴──`,
+                contextInfo: {
+                    mentionedJid: mentionList,
+                    forwardingScore: 999,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363387497418815@newsletter',
+                        newsletterName: config.BOT_NAME,
+                        serverMessageId: 143
+                    }
+                },
+                buttons: [
+                    {
+                        buttonId: "view_channel",
+                        buttonText: { displayText: "📢 View Channel" },
+                        type: 1
+                    }
+                ]
+            }, { quoted: mek });
 
-        for (let i of anu) {  
-            str += `📍 ${i.id}\n`;  
-        }  
+        // 🔹 GET USERS (PM)
+        } else if (type === "user" || type === "pm" || type === "pc" || type === "users") {
+            let chats = store.chats.all();
+            let anu = chats.filter(v => v.id && v.id.endsWith("@s.whatsapp.net"));
 
-        if (!str) return reply("❌ No personal chats found!");  
+            let mentionList = [];
+            str = `*「 LIST OF PERSONAL CHAT JIDS 」*\n\nTotal: ${anu.length}\n\n`;
 
-        await conn.sendMessage(from, {  
-            text: `*「 LIST OF PERSONAL CHAT JIDS 」*\n\nTotal: ${anu.length}\n\n${str}\n└──🔴 DML ┃ MD 🔴──`,  
-            contextInfo: {  
-                mentionedJid: [m.sender],  
-                forwardingScore: 999,  
-                isForwarded: true,  
-                forwardedNewsletterMessageInfo: {  
-                    newsletterJid: '120363387497418815@newsletter',  
-                    newsletterName: config.BOT_NAME,  
-                    serverMessageId: 143  
-                }  
-            }  
-        }, { quoted: mek });  
+            for (let i of anu) {
+                str += `📍 @${i.id.split("@")[0]}\n`;
+                mentionList.push(i.id);
+            }
 
-    // 🔹 GET GROUPS  
-    } else if (type === "group" || type === "groups" || type === "gc") {  
-        let groups = await conn.groupFetchAllParticipating();  
-        const gList = Object.values(groups);  
+            if (!anu.length) return reply("❌ No personal chats found!");
 
-        for (let g of gList.map(t => t.id)) {  
-            str += `📍 ${g}\n`;  
-        }  
+            await conn.sendMessage(from, {
+                text: str + `\n└──🔴 DML ┃ MD 🔴──`,
+                contextInfo: {
+                    mentionedJid: mentionList,
+                    forwardingScore: 999,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363387497418815@newsletter',
+                        newsletterName: config.BOT_NAME,
+                        serverMessageId: 143
+                    }
+                },
+                buttons: [
+                    {
+                        buttonId: "view_channel",
+                        buttonText: { displayText: "📢 View Channel" },
+                        type: 1
+                    }
+                ]
+            }, { quoted: mek });
 
-        if (!str) return reply("❌ No group chats found!");  
+        // 🔹 GET GROUPS
+        } else if (type === "group" || type === "groups" || type === "gc") {
+            let groups = await conn.groupFetchAllParticipating();
+            const gList = Object.values(groups);
 
-        await conn.sendMessage(from, {  
-            text: `*「 LIST OF GROUP CHAT JIDS 」*\n\n${str}\n└──🔴 DML ┃ MD 🔴──`,  
-            contextInfo: {  
-                mentionedJid: [m.sender],  
-                forwardingScore: 999,  
-                isForwarded: true,  
-                forwardedNewsletterMessageInfo: {  
-                    newsletterJid: '120363387497418815@newsletter',  
-                    newsletterName: config.BOT_NAME,  
-                    serverMessageId: 143  
-      
-                }  
-            }  
-        }, { quoted: mek });  
+            let mentionList = [];
+            str = `*「 LIST OF GROUP CHAT JIDS 」*\n\n`;
 
-    } else {  
-        return reply(`⚠️ Use: ${prefix}getall members | users | groups`);  
-    }  
+            for (let g of gList.map(t => t.id)) {
+                str += `📍 @${g.split("@")[0]}\n`;
+                mentionList.push(g);
+            }
 
-} catch (e) {  
-    console.error("GetAll Error:", e);  
-    reply(`❌ *Error Occurred !!*\n\n${e.message || e}`);  
-}
+            if (!gList.length) return reply("❌ No group chats found!");
 
+            await conn.sendMessage(from, {
+                text: str + `\n└──🔴 DML ┃ MD 🔴──`,
+                contextInfo: {
+                    mentionedJid: mentionList,
+                    forwardingScore: 999,
+                    isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: '120363387497418815@newsletter',
+                        newsletterName: config.BOT_NAME,
+                        serverMessageId: 143
+                    }
+                },
+                buttons: [
+                    {
+                        buttonId: "view_channel",
+                        buttonText: { displayText: "📢 View Channel" },
+                        type: 1
+                    }
+                ]
+            }, { quoted: mek });
+
+        } else {
+            return reply(`⚠️ Use: ${prefix}getall members | users | groups`);
+        }
+
+    } catch (e) {
+        console.error("GetAll Error:", e);
+        reply(`❌ *Error Occurred !!*\n\n${e.message || e}`);
+    }
 });
-
