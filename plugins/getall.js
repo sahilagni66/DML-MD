@@ -33,14 +33,10 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
             await conn.sendMessage(from, {
                 text: `*「 LIST OF GROUP MEMBERS 」*\n\n${str}\n└──🔴 DML ┃ MD 🔴──`,
                 contextInfo: {
-                    externalAdReply: {
-                        title: "📢 View Official Channel",
-                        body: "Tap to open our WhatsApp Channel",
-                        mediaType: 1,
-                        renderLargerThumbnail: true,
-                        showAdAttribution: true,
-                        sourceUrl: "https://whatsapp.com/channel/0029Vb2hoPpDZ4Lb3mSkVI3C", // backup link
-                        newsletterJid: "120363387497418815@newsletter" // ✅ your channel JID
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: "120363387497418815@newsletter", // ✅ your channel JID
+                        newsletterName: "📢 Official DML Channel",
+                        serverMessageId: 100
                     }
                 }
             }, { quoted: mek });
@@ -48,7 +44,7 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
         // 🔹 GET USERS
         } else if (type === "user" || type === "pm" || type === "pc" || type === "users") {
             let chats = store.chats.all();
-            let anu = chats.filter(v => v.id && v.id.endsWith("@s.whatsapp.net")); // ✅ strict filter
+            let anu = chats.filter(v => v.id && v.id.endsWith("@s.whatsapp.net"));
 
             for (let i of anu) {
                 str += `📍 ${i.id}\n`;
@@ -59,14 +55,10 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
             await conn.sendMessage(from, {
                 text: `*「 LIST OF PERSONAL CHAT JIDS 」*\n\nTotal: ${anu.length}\n\n${str}\n└──🔴 DML ┃ MD 🔴──`,
                 contextInfo: {
-                    externalAdReply: {
-                        title: "📢 View Official Channel",
-                        body: "Tap to open our WhatsApp Channel",
-                        mediaType: 1,
-                        renderLargerThumbnail: true,
-                        showAdAttribution: true,
-                        sourceUrl: "https://whatsapp.com/channel/0029Vb2hoPpDZ4Lb3mSkVI3C",
-                        newsletterJid: "120363387497418815@newsletter"
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: "120363387497418815@newsletter",
+                        newsletterName: "📢 Official DML Channel",
+                        serverMessageId: 101
                     }
                 }
             }, { quoted: mek });
@@ -85,14 +77,10 @@ async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
             await conn.sendMessage(from, {
                 text: `*「 LIST OF GROUP CHAT JIDS 」*\n\n${str}\n└──🔴 DML ┃ MD 🔴──`,
                 contextInfo: {
-                    externalAdReply: {
-                        title: "📢 View Official Channel",
-                        body: "Tap to open our WhatsApp Channel",
-                        mediaType: 1,
-                        renderLargerThumbnail: true,
-                        showAdAttribution: true,
-                        sourceUrl: "https://whatsapp.com/channel/0029Vb2hoPpDZ4Lb3mSkVI3C",
-                        newsletterJid: "120363387497418815@newsletter"
+                    forwardedNewsletterMessageInfo: {
+                        newsletterJid: "120363387497418815@newsletter",
+                        newsletterName: "📢 Official DML Channel",
+                        serverMessageId: 102
                     }
                 }
             }, { quoted: mek });
