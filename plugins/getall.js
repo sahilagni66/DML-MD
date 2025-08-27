@@ -12,7 +12,7 @@ cmd({
     filename: __filename,
     fromMe: true
 },
-async (conn, mek, m, { from, reply, isGroup, args, store }) => {
+async (conn, mek, m, { from, participants, reply, isGroup, args, store }) => {
     try {
         let str = "";
         let type = (args[0] || "").toLowerCase();
@@ -24,10 +24,12 @@ async (conn, mek, m, { from, reply, isGroup, args, store }) => {
             if (!groupInfo) return reply("❌ Failed to fetch group info.");
 
             let members = groupInfo.participants || [];
+            let mentionList = [];
             str = `*「 LIST OF GROUP MEMBERS 」*\n\n`;
 
             for (let i of members) {
-                str += `📍 ${i.id.split("@")[0]}\n`; // plain text, copyable
+                str += `📍 @${i.id.split("@")[0]}\n`;
+                mentionList.push(i.id);
             }
 
             if (!members.length) return reply("❌ No members found!");
@@ -35,6 +37,9 @@ async (conn, mek, m, { from, reply, isGroup, args, store }) => {
             await conn.sendMessage(from, {
                 text: str + `\n└──🔴 DML ┃ MD 🔴──`,
                 contextInfo: {
+                    mentionedJid: mentionList,
+                    forwardingScore: 999,
+                    isForwarded: true,
                     forwardedNewsletterMessageInfo: {
                         newsletterJid: '120363387497418815@newsletter',
                         newsletterName: config.BOT_NAME,
@@ -47,10 +52,13 @@ async (conn, mek, m, { from, reply, isGroup, args, store }) => {
         } else if (type === "user" || type === "pm" || type === "pc" || type === "users") {
             let chats = store.chats.all();
             let anu = chats.filter(v => v.id && v.id.endsWith("@s.whatsapp.net"));
+
+            let mentionList = [];
             str = `*「 LIST OF PERSONAL CHAT JIDS 」*\n\nTotal: ${anu.length}\n\n`;
 
             for (let i of anu) {
-                str += `📍 ${i.id.split("@")[0]}\n`;
+                str += `📍 @${i.id.split("@")[0]}\n`;
+                mentionList.push(i.id);
             }
 
             if (!anu.length) return reply("❌ No personal chats found!");
@@ -58,6 +66,9 @@ async (conn, mek, m, { from, reply, isGroup, args, store }) => {
             await conn.sendMessage(from, {
                 text: str + `\n└──🔴 DML ┃ MD 🔴──`,
                 contextInfo: {
+                    mentionedJid: mentionList,
+                    forwardingScore: 999,
+                    isForwarded: true,
                     forwardedNewsletterMessageInfo: {
                         newsletterJid: '120363387497418815@newsletter',
                         newsletterName: config.BOT_NAME,
@@ -70,10 +81,13 @@ async (conn, mek, m, { from, reply, isGroup, args, store }) => {
         } else if (type === "group" || type === "groups" || type === "gc") {
             let groups = await conn.groupFetchAllParticipating();
             const gList = Object.values(groups);
+
+            let mentionList = [];
             str = `*「 LIST OF GROUP CHAT JIDS 」*\n\n`;
 
             for (let g of gList.map(t => t.id)) {
-                str += `📍 ${g.split("@")[0]}\n`;
+                str += `📍 @${g.split("@")[0]}\n`;
+                mentionList.push(g);
             }
 
             if (!gList.length) return reply("❌ No group chats found!");
@@ -81,6 +95,9 @@ async (conn, mek, m, { from, reply, isGroup, args, store }) => {
             await conn.sendMessage(from, {
                 text: str + `\n└──🔴 DML ┃ MD 🔴──`,
                 contextInfo: {
+                    mentionedJid: mentionList,
+                    forwardingScore: 999,
+                    isForwarded: true,
                     forwardedNewsletterMessageInfo: {
                         newsletterJid: '120363387497418815@newsletter',
                         newsletterName: config.BOT_NAME,
