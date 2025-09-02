@@ -217,7 +217,8 @@ cmd({
 });
 
 // apk-dl
-cmd({
+
+    cmd({
   pattern: "apk",
   desc: "Download APK from Aptoide.",
   category: "download",
@@ -233,15 +234,16 @@ cmd({
       return reply("❌ Please provide an app name to search.");
     }
 
-    // Get current time for the request
-    const requestTime = new Date().toLocaleString('en-US', {
-      timeZone: 'Asia/Kolkata', // You can change this to your preferred timezone
+    // Get the timestamp when the command was received
+    const requestTime = new Date(m.messageTimestamp * 1000).toLocaleString('en-US', {
+      timeZone: 'Asia/Kolkata',
       hour12: true,
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      second: '2-digit'
     });
 
     await conn.sendMessage(from, { react: { text: "⏳", key: m.key } });
@@ -260,15 +262,19 @@ cmd({
     // Get app icon if available
     const appIcon = app.icon || app.graphic || null;
 
-    const caption = `╭━━━〔 *DML-MD APK Downloader* 〕━━━┈⊷
-┃ 📦 *Name:* ${app.name}
-┃ 🏋 *Size:* ${appSize} MB
-┃ 📦 *Package:* ${app.package}
-┃ 📅 *Updated On:* ${app.updated}
-┃ 👨‍💻 *Developer:* ${app.developer.name}
-┃ ⏰ *Request Time:* ${requestTime}
-╰━━━━━━━━━━━━━━━┈⊷
-🔗 *©POWERED BY DML-MD*`;
+    const caption = `✦━━━━━━━━━━━━━━━━━━✦
+      📥 *DML-MD APK Downloader*
+✦━━━━━━━━━━━━━━━━━━✦
+
+🔹 *App Name:* ${app.name}  
+🔹 *Size:* ${appSize} MB  
+🔹 *Package ID:* ${app.package}  
+🔹 *Last Updated:* ${app.updated}  
+🔹 *Developer:* ${app.developer.name}  
+🔹 *Request Time:* ${requestTime}  
+
+✦━━━━━━━━━━━━━━━━━━✦
+⚡ Powered by *DML-MD* ⚡`;
 
     await conn.sendMessage(from, { react: { text: "⬆️", key: m.key } });
 
@@ -276,7 +282,7 @@ cmd({
     if (appIcon) {
       await conn.sendMessage(from, {
         image: { url: appIcon },
-        caption: `📱 *${app.name}* - Preview`
+        caption: `📱 *${app.name}* - Preview\n⏰ Requested at: ${requestTime}`
       }, { quoted: m });
       
       // Small delay before sending the APK
@@ -286,7 +292,7 @@ cmd({
     // Send the APK file
     await conn.sendMessage(from, {
       document: { url: app.file.path_alt },
-      fileName: `${app.name.replace(/[^\w\s]/gi, '')}.apk`, // Remove special characters from filename
+      fileName: `${app.name.replace(/[^\w\s]/gi, '')}.apk`,
       mimetype: "application/vnd.android.package-archive",
       caption: caption
     }, { quoted: m });
@@ -298,7 +304,6 @@ cmd({
     reply("❌ An error occurred while fetching the APK. Please try again.");
   }
 });
-
 // G-Drive-DL
 
 cmd({
