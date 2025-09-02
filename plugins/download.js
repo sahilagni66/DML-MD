@@ -217,91 +217,102 @@ cmd({
 });
 
 // apk-dl
-
-    cmd({
+cmd({
   pattern: "apk",
   desc: "Download APK from Aptoide.",
   category: "download",
   filename: __filename
-}, async (conn, m, store, {
-  from,
-  quoted,
-  q,
-  reply
-}) => {
+}, async (conn, m, store, { from, quoted, q, reply }) => {
   try {
     if (!q) {
       return reply("❌ Please provide an app name to search.");
     }
 
-    // Get the timestamp when the command was received
-    const requestTime = new Date(m.messageTimestamp * 1000).toLocaleString('en-US', {
-      timeZone: 'Africa/Nairobi',
-      hour12: true,
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-
     await conn.sendMessage(from, { react: { text: "⏳", key: m.key } });
 
-    const apiUrl = `http://ws75.aptoide.com/api/7/apps/search/query=${encodeURIComponent(q)}/limit=1`;
+    const apiUrl = `http://ws75.aptoide.com/api/7/apps/search/query=${encodeURIComponent(q)}/limit=5`;
     const response = await axios.get(apiUrl);
     const data = response.data;
 
-    if (!data || !data.datalist || !data.datalist.list.length) {
+    if (!data?.datalist?.list?.length) {
       return reply("⚠️ No results found for the given app name.");
     }
 
-    const app = data.datalist.list[0];
-    const appSize = (app.size / 1048576).toFixed(2); // Convert bytes to MB
-    
-    // Get app icon if available
-    const appIcon = app.icon || app.graphic || null;
+    const apps = data.datalist.list.slice(0, 5);
+    let listMsg = `🔍 *Search results for:* ${q}\n\n`;
 
-    const caption = `✦━━━━━━━━━━━━━━━━━━✦
-      📥 *DML-MD APK Downloader*
-✦━━━━━━━━━━━━━━━━━━✦
+    apps.forEach((app, i) => {
+      const size = (app.size / 1048576).toFixed(2);
+      listMsg += `*${i + 1}.* 📱 ${app.name}\n   📏 ${size} MB | 📂 ${app.package}\n\n`;
+    });
 
-🔹 *App Name:* ${app.name}  
-🔹 *Size:* ${appSize} MB  
-🔹 *Package ID:* ${app.package}  
-🔹 *Last Updated:* ${app.updated}  
-🔹 *Developer:* ${app.developer.name}  
-🔹 *Request Time:* ${requestTime}  
+    listMsg += "👉 Reply with the number (1-5) of the app you want to download.";
 
-✦━━━━━━━━━━━━━━━━━━✦
+    await conn.sendMessage(from, { text: listMsg }, { quoted: m });
+
+    // 📌 Collect user’s choice
+    const collector = async (msg) => {
+      if (msg.key.remoteJid !== from || !msg.message?.conversation) return;
+      const choice = parseInt(msg.message.conversation.trim());
+      if (isNaN(choice) || choice < 1 || choice > apps.length) {
+        return reply("❌ Invalid choice. Please reply with a number between 1 and 5.");
+      }
+
+      const app = apps[choice - 1];
+      const appSize = (app.size / 1048576).toFixed(2);
+      const appIcon = app.icon || app.graphic || null;
+
+      const requestTime = new Date().toLocaleString('en-US', {
+        timeZone: 'Asia/Kolkata',
+        hour12: true,
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      const caption = `
+╔═══════════════════════╗
+   🚀 *DML-MD APK Downloader* 🚀
+╚═══════════════════════╝
+
+📌 *App Name*     : ${app.name}
+📏 *File Size*    : ${appSize} MB
+📂 *Package ID*   : ${app.package}
+🗓️ *Updated On*  : ${app.updated}
+👨‍💻 *Developer*  : ${app.developer?.name || "Unknown"}
+⏱️ *Request Time*: ${requestTime}
+
+═════════════════════════
 ⚡ Powered by *DML-MD* ⚡`;
 
-    await conn.sendMessage(from, { react: { text: "⬆️", key: m.key } });
+      // Send preview image
+      if (appIcon) {
+        await conn.sendMessage(from, {
+          image: { url: appIcon },
+          caption: `📱 *${app.name}* - Preview`
+        }, { quoted: msg });
+      }
 
-    // Send image first if available
-    if (appIcon) {
+      // Send APK file
       await conn.sendMessage(from, {
-        image: { url: appIcon },
-        caption: `📱 *${app.name}* - Preview\n⏰ Requested at: ${requestTime}`
-      }, { quoted: m });
-      
-      // Small delay before sending the APK
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
+        document: { url: app.file?.path_alt || app.file?.path },
+        fileName: `${app.name.replace(/[^\w\s]/gi, '')}.apk`,
+        mimetype: "application/vnd.android.package-archive",
+        caption: caption
+      }, { quoted: msg });
 
-    // Send the APK file
-    await conn.sendMessage(from, {
-      document: { url: app.file.path_alt },
-      fileName: `${app.name.replace(/[^\w\s]/gi, '')}.apk`,
-      mimetype: "application/vnd.android.package-archive",
-      caption: caption
-    }, { quoted: m });
+      await conn.sendMessage(from, { react: { text: "✅", key: msg.key } });
+    };
 
-    await conn.sendMessage(from, { react: { text: "✅", key: m.key } });
+    conn.ev.on("messages.upsert", async ({ messages }) => {
+      for (const msg of messages) await collector(msg);
+    });
 
   } catch (error) {
-    console.error("Error:", error);
-    reply("❌ An error occurred while fetching the APK. Please try again.");
+    console.error("APK Download Error:", error);
+    reply("❌ An error occurred while fetching the APK. Please try again later.");
   }
 });
 // G-Drive-DL
