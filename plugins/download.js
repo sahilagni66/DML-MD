@@ -236,7 +236,7 @@ cmd({
 
     // Get the timestamp when the command was received
     const requestTime = new Date(m.messageTimestamp * 1000).toLocaleString('en-US', {
-      timeZone: 'Asia/Kolkata',
+      timeZone: 'Africa/Nairobi',
       hour12: true,
       year: 'numeric',
       month: 'short',
