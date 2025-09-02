@@ -1,78 +1,82 @@
-const config = require('../config');
-const { cmd } = require('../command');
 
-// Parse time duration from arguments
-function parseDuration(value, unit) {
-    const multipliers = {
-        second: 1000,
-        seconds: 1000,
-        minute: 60000,
-        minutes: 60000,
-        hour: 3600000,
-        hours: 3600000,
-        day: 86400000,
-        days: 86400000
-    };
-    if (isNaN(value)) return null;
-    return multipliers[unit.toLowerCase()] ? parseInt(value) * multipliers[unit.toLowerCase()] : null;
-}
+
+const config = require('../config')
+const { cmd, commands } = require('../command')
 
 cmd({
     pattern: "opentime",
-    react: "🔓",
-    desc: "Temporarily open group for a specific time",
+    react: "🔖",
+    desc: "To open group to a time",
     category: "group",
-    use: ".opentime 10 minutes",
+    use: '.opentime',
     filename: __filename
-}, async (conn, mek, m, { from, args, isGroup, isAdmins, reply }) => {
-    try {
-        if (!isGroup) return reply("This command only works in groups.");
-        if (!isAdmins) return reply("Only group admins can use this command.");
-
-        const timer = parseDuration(args[0], args[1]);
-        if (!timer) return reply("*Choose a valid unit:*\nseconds, minutes, hours, days\n\n*Example:*\n10 minutes");
-
-        reply(`*Group will be opened for ${args[0]} ${args[1]}.*`);
-        await conn.groupSettingUpdate(from, 'not_announcement');
-
-        setTimeout(async () => {
-            await conn.groupSettingUpdate(from, 'announcement');
-            await conn.sendMessage(from, { text: `*⏱️ TIME'S UP*\nGroup is now closed. Only admins can send messages. 🔐` });
-        }, timer);
-
-        await conn.sendMessage(from, { react: { text: `✅`, key: mek.key } });
-    } catch (e) {
-        reply("*An error occurred while opening the group.*");
-        console.error(e);
-    }
-});
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{   
+if (!isGroup) return reply(ONLGROUP)
+if (!isAdmins) return reply(ADMIN)	
+  if (args[1] == 'second') {
+                    var timer = args[0] * `1000`
+                } else if (args[1] == 'minute') {
+                    var timer = args[0] * `60000`
+                } else if (args[1] == 'hour') {
+                    var timer = args[0] * `3600000`
+                } else if (args[1] == 'day') {
+                    var timer = args[0] * `86400000`
+                } else {
+                    return reply('*select:*\nsecond\nminute\nhour\n\n*example*\n10 second')
+                }
+                reply(`Open time ${q} starting from now`)
+                setTimeout(() => {
+                    var nomor = mek.participant
+                    const open = `*OPEN TIME* THE GROUP WAS OPENED BY DML-MD TO APPROVED ADMIN\n NOW MEMBERS CAN SEND MESSAGES 🔓`
+                    conn.groupSettingUpdate(from, 'not_announcement')
+                    reply(open)
+                }, timer)
+await conn.sendMessage(from, { react: { text: `✅`, key: mek.key }}) 
+} catch (e) {
+reply('*Error !!*')
+l(e)
+}
+})
 
 cmd({
     pattern: "closetime",
-    react: "🔒",
-    desc: "Temporarily close group for a specific time",
+    react: "🔖",
+    desc: "To close group to a time",
     category: "group",
-    use: ".closetime 10 minutes",
+    use: '.closstime',
     filename: __filename
-}, async (conn, mek, m, { from, args, isGroup, isAdmins, reply }) => {
-    try {
-        if (!isGroup) return reply("This command only works in groups.");
-        if (!isAdmins) return reply("Only group admins can use this command.");
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{   
+if (!isGroup) return reply(ONLGROUP)
+if (!isAdmins) return reply(ADMIN)	
+                if (args[1] == 'second') {
+                    var timer = args[0] * `1000`
+                } else if (args[1] == 'minute') {
+                    var timer = args[0] * `60000`
+                } else if (args[1] == 'hour') {
+                    var timer = args[0] * `3600000`
+                } else if (args[1] == 'day') {
+                    var timer = args[0] * `86400000`
+                } else {
+                    return reply('*select:*\nsecond\nminute\nhour\n\n*Example*\n10 second')
+                }
+                reply(`Close time ${q} starting from now`)
+                setTimeout(() => {
+                    var nomor = m.participant
+                    const close = `*CLOSE TIME* GROUP CLOSED BY DML-MD  AT APPROVED ADMIN\nNOW ONLY ADMIN CAN SEND MESSAGES 🔐`
+                    conn.groupSettingUpdate(from, 'announcement')
+                    reply(close)
+                }, timer)
+await conn.sendMessage(from, { react: { text: `✅`, key: mek.key }}) 
+} catch (e) {
+reply('*Error !!*')
+l(e)
+}
+})
 
-        const timer = parseDuration(args[0], args[1]);
-        if (!timer) return reply("*Choose a valid unit:*\nseconds, minutes, hours, days\n\n*Example:*\n10 minutes");
 
-        reply(`*Group will be closed for ${args[0]} ${args[1]}.*`);
-        await conn.groupSettingUpdate(from, 'announcement');
 
-        setTimeout(async () => {
-            await conn.groupSettingUpdate(from, 'not_announcement');
-            await conn.sendMessage(from, { text: `*⏱️ TIME'S UP*\nGroup is now open. All members can send messages. 🔓` });
-        }, timer);
-
-        await conn.sendMessage(from, { react: { text: `✅`, key: mek.key } });
-    } catch (e) {
-        reply("*An error occurred while closing the group.*");
-        console.error(e);
-    }
-});
+POWERED BY YOU
