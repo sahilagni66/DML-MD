@@ -75,7 +75,7 @@ cmd({
 
     const { desc, thumb, video_sd, video_hd } = data.result;
 
-    const caption = `╭━━━〔 * DML-MD TWITTER DOWNLOADER* 〕━━━⊷\n`
+    const caption = `╭━━━〔 *TWITTER DOWNLOADER* 〕━━━⊷\n`
       + `┃▸ *Description:* ${desc || "No description"}\n`
       + `╰━━━⪼\n\n`
       + `📹 *Download Options:*\n`
@@ -197,7 +197,7 @@ cmd({
       react: { text: "⬆️", key: m.key }
     });
 
-    const caption = `╭━━━〔 *DML-MD MEDIAFIRE DOWNLOADER* 〕━━━⊷\n`
+    const caption = `╭━━━〔 *MEDIAFIRE DOWNLOADER* 〕━━━⊷\n`
       + `┃▸ *File Name:* ${file_name}\n`
       + `┃▸ *File Type:* ${mime_type}\n`
       + `╰━━━⪼\n\n`
@@ -217,6 +217,7 @@ cmd({
 });
 
 // apk-dl
+
 cmd({
   pattern: "apk",
   desc: "Download APK from Aptoide.",
@@ -233,20 +234,9 @@ cmd({
       return reply("❌ Please provide an app name to search.");
     }
 
-    // Get current time for the request
-    const requestTime = new Date().toLocaleString('en-US', {
-      timeZone: 'Africa/Nairob', // You can change this to your preferred timezone
-      hour12: true,
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-
     await conn.sendMessage(from, { react: { text: "⏳", key: m.key } });
 
-    const apiUrl = `http://ws75.aptoide.com/api/7/apps/search/query=${encodeURIComponent(q)}/limit=1`;
+    const apiUrl = `http://ws75.aptoide.com/api/7/apps/search/query=${q}/limit=1`;
     const response = await axios.get(apiUrl);
     const data = response.data;
 
@@ -256,41 +246,21 @@ cmd({
 
     const app = data.datalist.list[0];
     const appSize = (app.size / 1048576).toFixed(2); // Convert bytes to MB
-    
-    // Get app icon if available
-    const appIcon = app.icon || app.graphic || null;
 
-    const caption = `✦━━━━━━━━━━━━━━━━━━✦
-      📥 *DML-MD APK Downloader*
-✦━━━━━━━━━━━━━━━━━━✦
-
-🔹 *App Name:* ${app.name}  
-🔹 *Size:* ${appSize} MB  
-🔹 *Package ID:* ${app.package}  
-🔹 *Last Updated:* ${app.updated}  
-🔹 *Developer:* ${app.developer.name}  
-🔹 *Request Time:* ${requestTime}  
-
-✦━━━━━━━━━━━━━━━━━━✦
-⚡ Powered by *DML-MD* ⚡`;
+    const caption = `╭━━━〔 *APK Downloader* 〕━━━┈⊷
+┃ 📦 *Name:* ${app.name}
+┃ 🏋 *Size:* ${appSize} MB
+┃ 📦 *Package:* ${app.package}
+┃ 📅 *Updated On:* ${app.updated}
+┃ 👨‍💻 *Developer:* ${app.developer.name}
+╰━━━━━━━━━━━━━━━┈⊷
+🔗 *Powered By DML-AI*`;
 
     await conn.sendMessage(from, { react: { text: "⬆️", key: m.key } });
 
-    // Send image first if available
-    if (appIcon) {
-      await conn.sendMessage(from, {
-        image: { url: appIcon },
-        caption: `📱 *${app.name}* - Preview`
-      }, { quoted: m });
-      
-      // Small delay before sending the APK
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-
-    // Send the APK file
     await conn.sendMessage(from, {
       document: { url: app.file.path_alt },
-      fileName: `${app.name.replace(/[^\w\s]/gi, '')}.apk`, // Remove special characters from filename
+      fileName: `${app.name}.apk`,
       mimetype: "application/vnd.android.package-archive",
       caption: caption
     }, { quoted: m });
@@ -302,6 +272,7 @@ cmd({
     reply("❌ An error occurred while fetching the APK. Please try again.");
   }
 });
+
 // G-Drive-DL
 
 cmd({
@@ -334,7 +305,7 @@ cmd({
         document: { url: downloadUrl },
         mimetype: response.data.result.mimetype,
         fileName: response.data.result.fileName,
-        caption: "*DML-MD*"
+        caption: "*© Powered By DML*"
       }, { quoted: m });
 
       await conn.sendMessage(from, { react: { text: "✅", key: m.key } });
