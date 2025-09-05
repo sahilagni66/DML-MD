@@ -20,11 +20,11 @@ async (conn, mek, m, { from, isGroup, isAdmins, reply, q }) => {
             return reply(
                 "❌ Please provide the poll question and options.\n\n" +
                 "👉 Example:\n" +
-                ".vote What is your favorite color?; Red; Blue; Green"
+                ".vote What is your favorite color? , Red, Blue, Green"
             );
         }
 
-        const parts = q.split(";");
+        const parts = q.split(",");
         if (parts.length < 3) {
             return reply("❌ You must provide at least 1 question and 2 options.");
         }
