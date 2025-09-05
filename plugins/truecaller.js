@@ -6,7 +6,7 @@ let numberCache = {};
 cmd({
     pattern: "getname",
     react: "🔎",
-    desc: "Get a Truecaller-style lookup for a phone number.",
+    desc: "Get Truecaller-style info with profile picture.",
     category: "tools",
     filename: __filename
 },
@@ -14,27 +14,29 @@ async (conn, mek, m, { reply, q }) => {
     try {
         if (!q) return reply("❌ Please provide a phone number.\n👉 Example: /getname +255712345678");
 
-        // Clean the number
         const num = q.replace(/[\s()-]/g, "");
 
         // Check cache
         if (numberCache[num]) return reply(numberCache[num]);
 
-        // Try to get WhatsApp contact name
+        // Default name
         let contactName = num;
-        try {
-            const contact = await conn.onWhatsApp(num);
-            if (contact && contact.length > 0 && contact[0].exists) {
-                contactName = contact[0].notify || num;
-            }
-        } catch { /* ignore */ }
+        let profilePic = null;
 
-        // Call Numverify API
+        // Try to get WhatsApp profile name and picture
+        try {
+            const jid = num.includes("@") ? num : num + "@s.whatsapp.net";
+            contactName = (await conn.onWhatsApp(jid))[0]?.notify || num;
+            profilePic = await conn.profilePictureUrl(jid).catch(() => null);
+        } catch { /* ignore if not found */ }
+
+        // Numverify API
         const apiKey = "5fae6e0f3e530c6e638b6b924c6fddd3";
         const url = `http://apilayer.net/api/validate?access_key=${apiKey}&number=${encodeURIComponent(num)}`;
         const res = await axios.get(url);
         const data = res.data;
 
+        // Build info card
         let msg = `🕵️‍♂️ *Phone Lookup Result* 🕵️‍♂️\n\n`;
         msg += `👤 Name: ${contactName}\n`;
         msg += `📞 Number: ${num}\n`;
@@ -44,10 +46,18 @@ async (conn, mek, m, { reply, q }) => {
         msg += `📡 Carrier: ${data.carrier || "Unknown"}\n`;
         msg += `📱 Line Type: ${data.line_type || "Unknown"}\n`;
 
-        // Cache the result
-        numberCache[num] = msg;
+        // Send with profile picture if available
+        if (profilePic) {
+            await conn.sendMessage(m.chat, {
+                image: { url: profilePic },
+                caption: msg
+            });
+        } else {
+            reply(msg);
+        }
 
-        reply(msg);
+        // Cache result
+        numberCache[num] = msg;
 
     } catch (e) {
         console.error("Error in getname:", e);
