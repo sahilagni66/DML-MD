@@ -9,7 +9,8 @@ cmd({
     desc: "Get a Truecaller-style lookup for a phone number.",
     category: "tools",
     filename: __filename
-}, async (conn, mek, m, { reply, q }) => {
+},
+async (conn, mek, m, { reply, q }) => {
     try {
         if (!q) return reply("❌ Please provide a phone number.\n👉 Example: /getname +255712345678");
 
@@ -34,8 +35,7 @@ cmd({
         const res = await axios.get(url);
         const data = res.data;
 
-        // Build the message
-        let msg = `🕵️‍♂️ *Phone Lookup Result* 🕵️‍♂️\n\n`;
+        let msg = `🛑 *Phone Lookup Result* ✅\n\n`;
         msg += `👤 Name: ${contactName}\n`;
         msg += `📞 Number: ${num}\n`;
         msg += `✅ Valid: ${data.valid ? "Yes" : "No"}\n`;
@@ -44,24 +44,10 @@ cmd({
         msg += `📡 Carrier: ${data.carrier || "Unknown"}\n`;
         msg += `📱 Line Type: ${data.line_type || "Unknown"}\n`;
 
-        // Forwarded newsletter info
-        const forwardedInfo = {
-            forwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363387497418815@newsletter',
-                newsletterName: config.OWNER_NAME || 'DML-MD',
-                serverMessageId: 143
-            }
-        };
-
-        // Send message with newsletter reference
-        await conn.sendMessage(m.chat, {
-            text: msg,
-            ...forwardedInfo
-        });
-
         // Cache the result
         numberCache[num] = msg;
+
+        reply(msg);
 
     } catch (e) {
         console.error("Error in getname:", e);
