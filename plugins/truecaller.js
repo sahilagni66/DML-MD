@@ -6,33 +6,27 @@ let numberCache = {};
 cmd({
     pattern: "getname",
     react: "🔎",
-    desc: "Get Truecaller-style lookup with profile picture (if available).",
+    desc: "Get a Truecaller-style lookup for a phone number.",
     category: "tools",
     filename: __filename
-},
-async (conn, mek, m, { reply, q }) => {
+}, async (conn, mek, m, { reply, q }) => {
     try {
         if (!q) return reply("❌ Please provide a phone number.\n👉 Example: /getname +255712345678");
 
+        // Clean the number
         const num = q.replace(/[\s()-]/g, "");
 
+        // Check cache
         if (numberCache[num]) return reply(numberCache[num]);
 
-        // Format JID for WhatsApp
-        const jid = num.includes("@") ? num : num + "@s.whatsapp.net";
-
-        // Try fetching profile picture
-        let profilePic = null;
-        try {
-            profilePic = await conn.profilePictureUrl(jid).catch(() => null);
-        } catch { profilePic = null; }
-
-        // Use number as default name
+        // Try to get WhatsApp contact name
         let contactName = num;
         try {
-            const waContact = await conn.onWhatsApp(jid);
-            if (waContact?.length > 0) contactName = waContact[0]?.notify || num;
-        } catch {}
+            const contact = await conn.onWhatsApp(num);
+            if (contact && contact.length > 0 && contact[0].exists) {
+                contactName = contact[0].notify || num;
+            }
+        } catch { /* ignore */ }
 
         // Call Numverify API
         const apiKey = "5fae6e0f3e530c6e638b6b924c6fddd3";
@@ -40,6 +34,7 @@ async (conn, mek, m, { reply, q }) => {
         const res = await axios.get(url);
         const data = res.data;
 
+        // Build the message
         let msg = `🕵️‍♂️ *Phone Lookup Result* 🕵️‍♂️\n\n`;
         msg += `👤 Name: ${contactName}\n`;
         msg += `📞 Number: ${num}\n`;
@@ -47,18 +42,29 @@ async (conn, mek, m, { reply, q }) => {
         msg += `🌍 Country: ${data.country_name || "Unknown"} (${data.country_code || "-"})\n`;
         msg += `📍 Location: ${data.location || "Unknown"}\n`;
         msg += `📡 Carrier: ${data.carrier || "Unknown"}\n`;
-        msg += `📱 Line Type: ${data.line_type || "Unknown"}\n`;
+        msg += `📱 Line Type: ${data.line_type || "Unknown"}\n\n`;
 
-        // Send profile picture if exists
-        if (profilePic) {
-            await conn.sendMessage(m.chat, {
-                image: { url: profilePic },
-                caption: msg
-            });
-        } else {
-            await reply(msg);
-        }
+        // Forwarded channel info
+        const forwardedInfo = {
+            forwarded: true,
+            message: {
+                viewOnce: false,
+                conversation: "Check out this channel for more updates!"
+            },
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363387497418815@newsletter',
+                newsletterName: "DML-GETNAME",
+                serverMessageId: 143
+            }
+        };
 
+        // Send the message with newsletter reference
+        await conn.sendMessage(m.chat, {
+            text: msg,
+            ...forwardedInfo
+        });
+
+        // Cache the result
         numberCache[num] = msg;
 
     } catch (e) {
