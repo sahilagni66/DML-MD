@@ -6,43 +6,33 @@ let numberCache = {};
 cmd({
     pattern: "getname",
     react: "🔎",
-    desc: "Get a Truecaller-style lookup with profile picture.",
+    desc: "Get Truecaller-style lookup with profile picture (if available).",
     category: "tools",
     filename: __filename
 },
 async (conn, mek, m, { reply, q }) => {
     try {
-        // ✅ React to the command
-        try {
-            await conn.sendMessage(m.chat, {
-                react: {
-                    text: "🔎",
-                    key: m.key
-                }
-            });
-        } catch(e) {
-            console.log("Reaction failed:", e);
-        }
-
         if (!q) return reply("❌ Please provide a phone number.\n👉 Example: /getname +255712345678");
 
         const num = q.replace(/[\s()-]/g, "");
 
-        // Check cache
         if (numberCache[num]) return reply(numberCache[num]);
 
-        // Default name and profile picture
-        let contactName = num;
+        // Format JID for WhatsApp
+        const jid = num.includes("@") ? num : num + "@s.whatsapp.net";
+
+        // Try fetching profile picture
         let profilePic = null;
-
-        // Try to get WhatsApp contact name and profile picture
         try {
-            const jid = num.includes("@") ? num : num + "@s.whatsapp.net";
-            const contact = await conn.onWhatsApp(jid);
-            if (contact?.length > 0) contactName = contact[0]?.notify || num;
-
             profilePic = await conn.profilePictureUrl(jid).catch(() => null);
-        } catch { /* ignore */ }
+        } catch { profilePic = null; }
+
+        // Use number as default name
+        let contactName = num;
+        try {
+            const waContact = await conn.onWhatsApp(jid);
+            if (waContact?.length > 0) contactName = waContact[0]?.notify || num;
+        } catch {}
 
         // Call Numverify API
         const apiKey = "5fae6e0f3e530c6e638b6b924c6fddd3";
@@ -50,7 +40,6 @@ async (conn, mek, m, { reply, q }) => {
         const res = await axios.get(url);
         const data = res.data;
 
-        // Build Truecaller-style info card
         let msg = `🕵️‍♂️ *Phone Lookup Result* 🕵️‍♂️\n\n`;
         msg += `👤 Name: ${contactName}\n`;
         msg += `📞 Number: ${num}\n`;
@@ -60,18 +49,16 @@ async (conn, mek, m, { reply, q }) => {
         msg += `📡 Carrier: ${data.carrier || "Unknown"}\n`;
         msg += `📱 Line Type: ${data.line_type || "Unknown"}\n`;
 
-        // Send with profile picture if available
+        // Send profile picture if exists
         if (profilePic) {
             await conn.sendMessage(m.chat, {
                 image: { url: profilePic },
                 caption: msg
             });
         } else {
-            // Fallback to text if profile picture not found
-            reply(msg);
+            await reply(msg);
         }
 
-        // Cache the result
         numberCache[num] = msg;
 
     } catch (e) {
