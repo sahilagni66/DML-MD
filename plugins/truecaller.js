@@ -12,6 +12,18 @@ cmd({
 },
 async (conn, mek, m, { reply, q }) => {
     try {
+        // ✅ React to the command message
+        try {
+            await conn.sendMessage(m.chat, {
+                react: {
+                    text: "🔎",
+                    key: m.key
+                }
+            });
+        } catch (e) {
+            console.log("Reaction failed:", e);
+        }
+
         if (!q) return reply("❌ Please provide a phone number.\n👉 Example: /getname +255712345678");
 
         const num = q.replace(/[\s()-]/g, "");
@@ -26,7 +38,8 @@ async (conn, mek, m, { reply, q }) => {
         // Try to get WhatsApp profile name and picture
         try {
             const jid = num.includes("@") ? num : num + "@s.whatsapp.net";
-            contactName = (await conn.onWhatsApp(jid))[0]?.notify || num;
+            const waContact = await conn.onWhatsApp(jid);
+            if (waContact?.length > 0) contactName = waContact[0]?.notify || num;
             profilePic = await conn.profilePictureUrl(jid).catch(() => null);
         } catch { /* ignore if not found */ }
 
