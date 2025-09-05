@@ -42,23 +42,17 @@ cmd({
         msg += `🌍 Country: ${data.country_name || "Unknown"} (${data.country_code || "-"})\n`;
         msg += `📍 Location: ${data.location || "Unknown"}\n`;
         msg += `📡 Carrier: ${data.carrier || "Unknown"}\n`;
-        msg += `📱 Line Type: ${data.line_type || "Unknown"}\n\n`;
+        msg += `📱 Line Type: ${data.line_type || "Unknown"}\n`;
 
-        // Forwarded channel info
-        const forwardedInfo = {
-            forwarded: true,
-            message: {
-                viewOnce: false,
-                conversation: "Check out this channel for more updates!"
-            },
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363387497418815@newsletter',
-                newsletterName: "DML-GETNAME",
-                serverMessageId: 143
-            }
+        // Forwarded newsletter info
+                        forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363387497418815@newsletter',
+                    newsletterName: config.OWNER_NAME || 'DML-MD',
+                    serverMessageId: 143
+                           }
         };
 
-        // Send the message with newsletter reference
+        // Send message with newsletter reference
         await conn.sendMessage(m.chat, {
             text: msg,
             ...forwardedInfo
