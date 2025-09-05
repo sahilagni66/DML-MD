@@ -45,11 +45,13 @@ cmd({
         msg += `📱 Line Type: ${data.line_type || "Unknown"}\n`;
 
         // Forwarded newsletter info
-                        forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363387497418815@newsletter',
-                    newsletterName: config.OWNER_NAME || 'DML-MD',
-                    serverMessageId: 143
-                           }
+        const forwardedInfo = {
+            forwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363387497418815@newsletter',
+                newsletterName: config.OWNER_NAME || 'DML-MD',
+                serverMessageId: 143
+            }
         };
 
         // Send message with newsletter reference
