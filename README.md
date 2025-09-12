@@ -50,9 +50,9 @@ Help support the project by clicking the buttons below. Fork it to your GitHub a
 ### 🔹 Step 2: Generate Session ID
 You need a session to connect your bot. Choose your preferred method , I recommended using server 1:
 
-[![Scan QR Code](https://img.shields.io/badge/🔍_SCAN_QR-FF6347?style=for-the-badge&logo=qr-code&logoColor=white)](https://dml-server.onrender.com/qr) 
+[![Scan QR Code](https://img.shields.io/badge/🔍_SCAN_QR-FF6347?style=for-the-badge&logo=qr-code&logoColor=white)](https://dml-sessionsite.onrender.com/qr) 
 
-[![Pair Device](https://img.shields.io/badge/⚡_SERVER_1-8A2BE2?style=for-the-badge&logo=windows&logoColor=white&labelColor=1A1A2E&color=9400D3)](https://dml-server.onrender.com)
+[![Pair Device](https://img.shields.io/badge/⚡_SERVER_1-8A2BE2?style=for-the-badge&logo=windows&logoColor=white&labelColor=1A1A2E&color=9400D3)](https://dml-sessionsite.onrender.com/)
 ---
 [![Pair Device](https://img.shields.io/badge/🚀_SERVER_2-4CAF50?style=for-the-badge&logo=link&logoColor=white)](https://two-vz60.onrender.com)
 ---
