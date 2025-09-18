@@ -34,7 +34,7 @@ cmd({
 
         const { url, title, image, timestamp, ago, views, author } = data.results[0];
 
-        let info = `🍄 *𝚂𝙾𝙽𝙶 𝙳𝙾𝚆𝙽𝙻𝙾𝙰𝙳𝙴𝚁* 🍄\n\n` +
+        let info = `🇹🇿 *DML-MD DOWNLOADER* ⤵\n\n` +
             `🎵 *Title:* ${title || "Unknown"}\n` +
             `⏳ *Duration:* ${timestamp || "Unknown"}\n` +
             `👀 *Views:* ${views || "Unknown"}\n` +
@@ -66,14 +66,14 @@ cmd({
                 let type;
                 let response;
                 
-                if (userReply === "1.1") {
+                if (userReply === "1") {
                     msg = await conn.sendMessage(from, { text: "⏳ Processing..." }, { quoted: mek });
                     response = await dy_scrap.ytmp3(`https://youtube.com/watch?v=${id}`);
                     let downloadUrl = response?.result?.download?.url;
                     if (!downloadUrl) return await reply("❌ Download link not found!");
                     type = { audio: { url: downloadUrl }, mimetype: "audio/mpeg" };
                     
-                } else if (userReply === "1.2") {
+                } else if (userReply === "2") {
                     msg = await conn.sendMessage(from, { text: "⏳ Processing..." }, { quoted: mek });
                     const response = await dy_scrap.ytmp3(`https://youtube.com/watch?v=${id}`);
                     let downloadUrl = response?.result?.download?.url;
@@ -81,11 +81,11 @@ cmd({
                     type = { document: { url: downloadUrl }, fileName: `${title}.mp3`, mimetype: "audio/mpeg", caption: title };
                     
                 } else { 
-                    return await reply("❌ Invalid choice! Reply with 1.1 or 1.2.");
+                    return await reply("❌ Invalid choice! Reply with 1 or 2.");
                 }
 
                 await conn.sendMessage(from, type, { quoted: mek });
-                await conn.sendMessage(from, { text: '✅ Media Upload Successful ✅', edit: msg.key });
+                await conn.sendMessage(from, { text: 'Dml Say Media Upload Successful ✅', edit: msg.key });
 
             } catch (error) {
                 console.error(error);
