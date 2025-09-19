@@ -102,13 +102,21 @@ cmd(
         }
       });
 
-      // Newsletter Forward Section (Fixed & Arranged)
+      // Newsletter Forward Section (With Button)
       const dec = "📢 *Check our official channel for updates!*";
       await conn.sendMessage(
         from,
         {
-          image: { url: `https://files.catbox.moe/tjt2z2.jpg` },
-          caption: dec,
+          text: dec,
+          footer: "『 DML-TECH ",
+          buttons: [
+            {
+              buttonId: "view_channel",
+              buttonText: { displayText: "📲 View Channel" },
+              type: 1
+            }
+          ],
+          headerType: 1,
           contextInfo: {
             mentionedJid: [m.sender],
             forwardingScore: 999,
@@ -117,14 +125,6 @@ cmd(
               newsletterJid: '120363387497418815@newsletter',
               newsletterName: '『 DML-TECH 』',
               serverMessageId: 143
-            },
-            externalAdReply: {
-              title: "Join Our Official Channel 🚀",
-              body: "『 DML-TECH 』 Newsletter",
-              thumbnailUrl: "https://files.catbox.moe/tjt2z2.jpg",
-              sourceUrl: "https://whatsapp.com/channel/0029Vb2hoPpDZ4Lb3mSkVI3C",
-              mediaType: 1,
-              renderLargerThumbnail: true
             }
           }
         },
