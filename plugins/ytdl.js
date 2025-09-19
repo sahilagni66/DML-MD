@@ -11,11 +11,11 @@ function replaceYouTubeID(url) {
 
 cmd({
     pattern: "play",
-    alias: ["mp3", "ytmp3", "yt"],
+    alias: ["mp3", "ytmp3"],
     react: "🎵",
-    desc: "Download YouTube Audio/Video",
+    desc: "Download Ytmp3",
     category: "download",
-    use: ".play <Text or YT URL>",
+    use: ".song <Text or YT URL>",
     filename: __filename
 }, async (conn, m, mek, { from, q, reply }) => {
     try {
@@ -46,8 +46,7 @@ cmd({
             `🖇 *Url:* ${url || "Unknown"}\n\n` +
             `🔽 *Reply with your choice:*\n` +
             `1 *Audio Type* 🎵\n` +
-            `2 *Document Type* 📁\n` +
-            `3 *Video Type* 🎬\n\n` +
+            `2 *Document Type* 📁\n\n` +
             `${config.FOOTER || "𓆩DML-PLAY𓆪"}`;
 
         const sentMsg = await conn.sendMessage(
@@ -59,7 +58,7 @@ cmd({
 
         await conn.sendMessage(from, { react: { text: '🎶', key: sentMsg.key } });
 
-        // Listen once for user choice (audio/doc/video)
+        // Listen once only for user reply
         conn.ev.once('messages.upsert', async (messageUpdate) => {
             try {
                 const mekInfo = messageUpdate?.messages[0];
@@ -71,73 +70,43 @@ cmd({
                 if (!isReplyToSentMsg) return;
 
                 let userReply = messageType.trim();
+                let msg;
+                let type;
+                let response;
 
-                // Show quality options
                 if (userReply === "1") {
-                    return await reply("🎵 Choose Audio Quality:\n\n1. 128kbps\n2. 320kbps");
+                    msg = await conn.sendMessage(from, { text: "⏳ Processing..." }, { quoted: mek });
+                    response = await dy_scrap.ytmp3(`https://youtube.com/watch?v=${id}`);
+                    let downloadUrl = response?.result?.download?.url;
+                    if (!downloadUrl) return await reply("❌ Download link not found!");
+                    type = { audio: { url: downloadUrl }, mimetype: "audio/mpeg" };
+
                 } else if (userReply === "2") {
-                    return await reply("📁 Choose Document Quality:\n\n1. 128kbps\n2. 320kbps");
-                } else if (userReply === "3") {
-                    return await reply("🎬 Choose Video Quality:\n\n1. 360p\n2. 720p");
+                    msg = await conn.sendMessage(from, { text: "⏳ Processing..." }, { quoted: mek });
+                    response = await dy_scrap.ytmp3(`https://youtube.com/watch?v=${id}`);
+                    let downloadUrl = response?.result?.download?.url;
+                    if (!downloadUrl) return await reply("❌ Download link not found!");
+                    type = { document: { url: downloadUrl }, fileName: `${title}.mp3`, mimetype: "audio/mpeg", caption: title };
+
                 } else {
-                    return await reply("❌ Invalid choice! Reply with 1, 2 or 3");
+                    return await reply("❌ Invalid choice! Reply with 1 or 2");
                 }
 
-                // Listen again for quality choice
-                conn.ev.once('messages.upsert', async (qualityUpdate) => {
-                    try {
-                        const qInfo = qualityUpdate?.messages[0];
-                        if (!qInfo?.message) return;
-                        const qualityChoice = qInfo?.message?.conversation || qInfo?.message?.extendedTextMessage?.text;
-                        const qReply = qualityChoice.trim();
+                await conn.sendMessage(from, type, { quoted: mek });
+                await conn.sendMessage(from, { text: '✅ Media Upload Successful' }, { quoted: mek });
 
-                        let response, downloadUrl, type;
-
-                        // Audio (128 / 320 kbps)
-                        if (userReply === "1" || userReply === "2") {
-                            let quality = qReply === "2" ? "320kbps" : "128kbps";
-                            let msg = await conn.sendMessage(from, { text: `⏳ Processing ${quality}...` }, { quoted: mek });
-                            response = await dy_scrap.ytmp3(`https://youtube.com/watch?v=${id}`, quality);
-                            downloadUrl = response?.result?.download?.url;
-                            if (!downloadUrl) return await reply("❌ Audio download link not found!");
-
-                            if (userReply === "1") {
-                                type = { audio: { url: downloadUrl }, mimetype: "audio/mpeg" };
-                            } else {
-                                type = { document: { url: downloadUrl }, fileName: `${title}.mp3`, mimetype: "audio/mpeg", caption: title };
-                            }
-                        }
-
-                        // Video (360p / 720p)
-                        if (userReply === "3") {
-                            let quality = qReply === "2" ? "720p" : "360p";
-                            let msg = await conn.sendMessage(from, { text: `⏳ Processing ${quality} video...` }, { quoted: mek });
-                            response = await dy_scrap.ytmp4(`https://youtube.com/watch?v=${id}`, quality);
-                            downloadUrl = response?.result?.download?.url;
-                            if (!downloadUrl) return await reply("❌ Video download link not found!");
-                            type = { video: { url: downloadUrl }, mimetype: "video/mp4", caption: `${title} (${quality})` };
-                        }
-
-                        await conn.sendMessage(from, type, { quoted: mek });
-                        await conn.sendMessage(from, { text: 'Dml Say ✅ Media Upload Successful' }, { quoted: mek });
-
-                    } catch (error) {
-                        console.error(error);
-                        await reply(`❌ *Error while fetching quality:* ${error.message || "Unknown Error"}`);
-                    }
-                });
             } catch (error) {
                 console.error(error);
                 await reply(`❌ *Error while processing:* ${error.message || "Unknown Error"}`);
             }
         });
 
-        // Final banner
+        // Final banner (fixed dec issue)
         await conn.sendMessage(
             from,
             {
                 image: { url: `https://files.catbox.moe/tjt2z2.jpg` },
-                caption: "『 DML-TECH 』 — Enjoy your music & videos 🎶🎬",
+                caption: "『 DML-TECH 』 — Enjoy your music 🎵",
                 contextInfo: {
                     mentionedJid: [m.sender],
                     forwardingScore: 999,
