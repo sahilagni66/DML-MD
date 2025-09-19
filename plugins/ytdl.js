@@ -23,6 +23,7 @@ cmd(
     try {
       if (!q) return await reply("❌ Please provide a Query or Youtube URL!");
 
+      // Fetch YouTube video ID
       let id = q.startsWith("https://") ? replaceYouTubeID(q) : null;
       if (!id) {
         const searchResults = await dy_scrap.ytsearch(q);
@@ -47,16 +48,16 @@ cmd(
         `2 *Document Type* 📁\n\n` +
         `${config.FOOTER || "𓆩DML-PLAY𓆪"}`;
 
+      // Send video info
       const sentMsg = await conn.sendMessage(
         from,
         { image: { url: image }, caption: info },
         { quoted: mek }
       );
       const messageID = sentMsg.key.id;
-
       await conn.sendMessage(from, { react: { text: '🎶', key: sentMsg.key } });
 
-      // Listen for reply
+      // Listen for user reply
       conn.ev.on('messages.upsert', async (messageUpdate) => {
         try {
           const mekInfo = messageUpdate?.messages[0];
@@ -102,13 +103,13 @@ cmd(
         }
       });
 
-      // Newsletter Forward Section (With Button)
+      // Newsletter Forward with View Channel Button (directly inside main cmd)
       const dec = "📢 *Check our official channel for updates!*";
       await conn.sendMessage(
         from,
         {
           text: dec,
-          footer: "『 DML-TECH ",
+          footer: " DML-TECH ",
           buttons: [
             {
               buttonId: "view_channel",
