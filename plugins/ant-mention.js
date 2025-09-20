@@ -20,18 +20,24 @@ async (conn, mek, m, { from, isGroup, groupAdmins, senderNumber, reply }) => {
         }
 
         antiMentionStatus[from] = !antiMentionStatus[from];
-        reply(`🔒 Anti-Mention is now *${antiMentionStatus[from] ? "ENABLED ✅" : "DISABLED ❌"}* in this group.`);
+        const status = antiMentionStatus[from] ? "ENABLED" : "DISABLED";
+
+        // Fetch group metadata for group name
+        const groupMetadata = await conn.groupMetadata(from);
+        const groupName = groupMetadata.subject || "this group";
+
+        reply(`🔒 Anti-Mention in *${groupName}* is now *${status}*.`);
     } catch (e) {
         console.error("Error toggling anti-mention:", e);
         reply("An error occurred while toggling anti-mention.");
     }
 });
 
-// Command to check anti-mention status
+// Command to check Anti-Mention status
 cmd({
     pattern: "antimentionstatus",
-    alias: ["amentionstatus", "nomentionstatus"],
-    desc: "Check if anti-mention is enabled or disabled in this group.",
+    alias: ["antimentioncheck", "antimentionstate"],
+    desc: "Check if Anti-Mention is enabled or disabled in this group.",
     react: "ℹ️",
     category: "group",
     filename: __filename,
@@ -39,11 +45,17 @@ cmd({
 async (conn, mek, m, { from, isGroup, reply }) => {
     try {
         if (!isGroup) return reply("This command can only be used in groups.");
-        const status = antiMentionStatus[from] ? "ENABLED ✅" : "DISABLED ❌";
-        reply(`📊 Anti-Mention Status for *${from}*:\n\n🔒 Status: *${status}*`);
+
+        const status = antiMentionStatus[from] ? "ENABLED" : "DISABLED";
+
+        // Fetch group metadata for group name
+        const groupMetadata = await conn.groupMetadata(from);
+        const groupName = groupMetadata.subject || "this group";
+
+        reply(`ℹ️ Anti-Mention in *${groupName}* is currently *${status}*.`);
     } catch (e) {
         console.error("Error checking anti-mention status:", e);
-        reply("An error occurred while checking anti-mention status.");
+        reply("An error occurred while checking Anti-Mention status.");
     }
 });
 
