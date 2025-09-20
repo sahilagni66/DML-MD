@@ -46,7 +46,7 @@ async (conn, mek, m, { from, isGroup, reply }) => {
     try {
         if (!isGroup) return reply("This command can only be used in groups.");
 
-        const status = antiMentionStatus[from] ? "ENABLED" : "DISABLED";
+        const status = antiMentionStatus[from] ? "ENABLED ✅" : "DISABLED ❌";
 
         // Fetch group metadata for group name
         const groupMetadata = await conn.groupMetadata(from);
