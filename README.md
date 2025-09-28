@@ -48,7 +48,7 @@ Help support the project by clicking the buttons below. Fork it to your GitHub a
 ---
 
 ### 🔹 Step 2: Generate Session ID
-You need a session to connect your bot. Choose your preferred method , I recommended using server 1:
+You need a session to connect your bot. Choose your preferred method  I recommended using server 1
 
 [![Scan QR Code](https://img.shields.io/badge/🔍_SCAN_QR-FF6347?style=for-the-badge&logo=qr-code&logoColor=white)](https://dml-sessionsite.onrender.com/qr) 
 
